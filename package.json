@@ -1,6 +1,6 @@
 {
   "name": "jrv",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Javascript Reactive Variables",
   "main": "dist/jrv.js",
   "scripts": {

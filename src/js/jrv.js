@@ -12,6 +12,7 @@ class JRV {
     flag_dirty() {
         this.dirty = true;
         if (this.change_handler) { this.update(); }
+        this.callbacks.map(cb => cb());
         return this;
     }
 
@@ -47,17 +48,16 @@ class JRV {
 
     update() {
 
-        var isFunc   = (typeof this.comp === 'function'),
-            oldValue = {};
-
-        Object.assign(oldValue, this.value);
+        var compIsFunc = (typeof this.comp  === 'function'),
+            valIsObj   = (typeof this.value === 'object'),
+            oldVal     = valIsObj? undefined : this.value;
 
         this.dirty = false;
 
-        this.value = (isFunc? this.comp() : this.comp);
+        this.value = (compIsFunc? this.comp() : this.comp);
 
-        if (this.value !== oldValue) {
-            this.change_handler(this.value, oldValue);
+        if (this.value !== oldVal) {
+            this.change_handler(this.value, oldVal);
         }
 
         return this.value;
