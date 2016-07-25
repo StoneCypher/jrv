@@ -1,7 +1,8 @@
 
 class JRV {
 
-    constructor(comp = (() => true), onchange = (() => true)) {
+    constructor(comp = (() => true), onchange) {
+        console.log('construction');
         this.dirty          = true;
         this.comp           = comp;
         this.change_handler = onchange;
@@ -9,10 +10,16 @@ class JRV {
         this.update();
     }
 
-    flag_dirty() {
-        this.dirty = true;
-        if (this.change_handler) { this.update(); }
+    dirty_descendants() {
+        console.log('dirtying descendants');
         this.callbacks.map(cb => cb());
+    }
+
+    flag_dirty() {
+        console.log('flagging dirty');
+        this.dirty = true;
+        if (this.change_handler) { console.log('forcing update: ch'); this.update(); } else { console.log('no force'); }
+        this.dirty_descendants();
         return this;
     }
 
@@ -27,7 +34,7 @@ class JRV {
     }
 
     make_notifier() {
-        return (() => this.flag_dirty());
+        return (() => { console.log('notifier fired'); return this.flag_dirty(); });
     }
 
     onchange(newOnChange) {
@@ -38,7 +45,6 @@ class JRV {
     set v(newComp) {
         this.comp = newComp;
         this.update();
-        this.callbacks.map(cb => cb());
     }
 
     get v() {
@@ -48,17 +54,25 @@ class JRV {
 
     update() {
 
+        console.log('updating');
+
         var compIsFunc = (typeof this.comp  === 'function'),
             valIsObj   = (typeof this.value === 'object'),
-            oldVal     = valIsObj? undefined : this.value;
+            oldVal     = valIsObj? NaN : this.value;  // because NaN === NaN is false, so nothing .comp() returns will match NaN // because Javascript is gross
 
         this.dirty = false;
 
-        this.value = (compIsFunc? this.comp() : this.comp);
+        this.value = (compIsFunc? (console.log('  comp'), this.comp()) : (console.log('  store'), this.comp));
 
         if (this.value !== oldVal) {
-            this.change_handler(this.value, oldVal);
+            console.log('  calling change handler');
+            this.change_handler? this.change_handler(this.value, oldVal) : true;
+        } else {
+            console.log('  not calling change handler');
         }
+
+        console.log('  update is dirtying descendants');
+        this.dirty_descendants();
 
         return this.value;
 
