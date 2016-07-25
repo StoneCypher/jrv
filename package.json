@@ -1,0 +1,22 @@
+{
+  "name": "jrv",
+  "version": "0.0.1",
+  "description": "Javascript Reactive Variables",
+  "main": "dist/jrv.js",
+  "scripts": {
+    "test": "npm test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/StoneCypher/jrv.git"
+  },
+  "keywords": [
+    "reactive"
+  ],
+  "author": "John Haugeland <stonecypher@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/StoneCypher/jrv/issues"
+  },
+  "homepage": "https://github.com/StoneCypher/jrv#readme"
+}
